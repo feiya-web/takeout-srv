@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: takeout-order
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/takeout_order?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+  redis:
+    host: localhost
+    port: 6379
+    password: 123456
+    database: 0
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+
+takeout:
+  jwt:
+    # 管理端 JWT 配置（HS256 密钥长度 >= 32 字节）
+    admin-secret: takeout-order-admin-jwt-secret-key-0123456789abcdef
+    admin-ttl: 7200000
+    admin-token-name: token
+    # 用户端 JWT 配置
+    user-secret: takeout-order-user-jwt-secret-key-0123456789abcdef00
+    user-ttl: 7200000
+    user-token-name: token
+
+logging:
+  level:
+    com.takeout: info
