@@ -54,7 +54,7 @@ mvn test
 | 环境变量 | 默认值 | 说明 |
 |----------|--------|------|
 | `MYSQL_URL` | `jdbc:mysql://localhost:3306/takeout_order...` | 数据库连接 |
-| `MYSQL_USER` / `MYSQL_PASSWORD` | `root` / `root` | 数据库账号 |
+| `MYSQL_USER` / `MYSQL_PASSWORD` | `root` / `123456` | 数据库账号 |
 | `REDIS_HOST` / `REDIS_PORT` / `REDIS_PASSWORD` | `localhost` / `6379` / `123456` | Redis 连接 |
 | `JWT_ADMIN_SECRET` / `JWT_USER_SECRET` | 开发用固定串 | JWT 签名密钥（长度 ≥32 字节） |
 
