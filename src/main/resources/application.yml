@@ -6,13 +6,15 @@ spring:
     name: takeout-order
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/takeout_order?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: 123456
+    # 下方 ${} 为环境变量注入，冒号后是本地开发默认值。
+    # 部署到其他环境时通过环境变量覆盖，不要把真实密码写进仓库。
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/takeout_order?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:root}
   redis:
-    host: localhost
-    port: 6379
-    password: 123456
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:123456}
     database: 0
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
@@ -29,12 +31,13 @@ mybatis-plus:
 
 takeout:
   jwt:
-    # 管理端 JWT 配置（HS256 密钥长度 >= 32 字节）
-    admin-secret: takeout-order-admin-jwt-secret-key-0123456789abcdef
+    # JWT 签名密钥（长度 >= 32 字节）。默认值仅供本地开发，
+    # 正式部署必须通过 JWT_ADMIN_SECRET / JWT_USER_SECRET 环境变量注入独立密钥。
+    admin-secret: ${JWT_ADMIN_SECRET:takeout-order-admin-jwt-secret-key-0123456789abcdef}
     admin-ttl: 7200000
     admin-token-name: token
     # 用户端 JWT 配置
-    user-secret: takeout-order-user-jwt-secret-key-0123456789abcdef00
+    user-secret: ${JWT_USER_SECRET:takeout-order-user-jwt-secret-key-0123456789abcdef00}
     user-ttl: 7200000
     user-token-name: token
 
