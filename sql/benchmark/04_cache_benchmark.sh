@@ -5,10 +5,11 @@
 # 场景B：读写混合（约 9% 写操作触发缓存失效）—— 对应真实业务的命中率口径
 # 场景C：每次读前清空缓存（模拟无缓存）—— 对比 DB 直查耗时
 # 用法：bash 04_cache_benchmark.sh
-# 连接参数可用环境变量覆盖：BASE_URL / REDIS_CLI / DEMO_PASSWORD
+# 连接参数可用环境变量覆盖：BASE_URL / REDIS_CLI / REDIS_PASSWORD / DEMO_PASSWORD
 # ============================================================
 BASE="${BASE_URL:-http://localhost:8080}"
-REDIS_CLI="${REDIS_CLI:-redis-cli}"   # 默认取 PATH 中的 redis-cli
+REDIS_CLI="${REDIS_CLI:-redis-cli}"      # 默认取 PATH 中的 redis-cli
+REDIS_PASSWORD="${REDIS_PASSWORD:-123456}"   # Redis 口令，与 application.yml 默认值一致
 DEMO_PASSWORD="${DEMO_PASSWORD:-123456}"   # 演示账号口令，与种子数据一致
 CURL() { curl -s --noproxy "*" "$@"; }
 

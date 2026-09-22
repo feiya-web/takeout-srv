@@ -75,7 +75,7 @@ mvn test
 |------|--------|----------|
 | `MYSQL_BIN` / `MYSQL_HOST` / `MYSQL_PORT` / `MYSQL_USER` / `MYSQL_PASSWORD` / `MYSQL_DB` | `mysql` / `127.0.0.1` / `3306` / `root` / `123456` / `takeout_order` | `02_run_benchmark.sh` |
 | `BASE_URL` | `http://localhost:8080` | `03_api_benchmark.sh`、`04_cache_benchmark.sh` |
-| `REDIS_CLI` | `redis-cli` | `04_cache_benchmark.sh` |
+| `REDIS_CLI` / `REDIS_PASSWORD` | `redis-cli` / `123456` | `04_cache_benchmark.sh` |
 | `DEMO_PASSWORD` | `123456` | `03`、`04`（登录演示账号用） |
 
 ## 接口清单（鉴权 22 个）
