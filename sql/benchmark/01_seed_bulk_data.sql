@@ -1,7 +1,7 @@
 -- ============================================================
 -- 压测数据构造脚本（在已有种子数据基础上追加，不删除原数据）
 -- 目标：orders 10 万行 / order_detail 25 万行 / dish 5000 行 / user 1000 行
--- 用法：mysql -uroot -p123456 --default-character-set=utf8mb4 takeout_order < 01_seed_bulk_data.sql
+-- 用法：mysql -u root -p --default-character-set=utf8mb4 takeout_order < 01_seed_bulk_data.sql
 -- ============================================================
 SET SESSION cte_max_recursion_depth = 1000000;
 

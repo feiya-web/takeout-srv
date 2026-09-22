@@ -34,8 +34,8 @@ Explain 对比：全表扫描 99,398 行 + `Using filesort` → 走联合索引 
 ## 快速启动
 
 ```bash
-# 1. 初始化数据库
-mysql -uroot -proot < sql/takeout_order.sql
+# 1. 初始化数据库（默认口令 123456，可用 MYSQL_PASSWORD 覆盖）
+mysql -u root -p < sql/takeout_order.sql
 
 # 2. 启动 Redis（默认 localhost:6379）
 redis-server
@@ -66,6 +66,17 @@ mvn test
 - 用户端：`zhangsan` / `lisi` → POST /user/login
 
 登录成功返回 token，后续请求携带请求头 `token: <值>`。
+
+### 压测脚本配置
+
+`sql/benchmark/` 下的脚本同样不写死连接信息，均可用环境变量覆盖：
+
+| 变量 | 默认值 | 适用脚本 |
+|------|--------|----------|
+| `MYSQL_BIN` / `MYSQL_HOST` / `MYSQL_PORT` / `MYSQL_USER` / `MYSQL_PASSWORD` / `MYSQL_DB` | `mysql` / `127.0.0.1` / `3306` / `root` / `123456` / `takeout_order` | `02_run_benchmark.sh` |
+| `BASE_URL` | `http://localhost:8080` | `03_api_benchmark.sh`、`04_cache_benchmark.sh` |
+| `REDIS_CLI` | `redis-cli` | `04_cache_benchmark.sh` |
+| `DEMO_PASSWORD` | `123456` | `03`、`04`（登录演示账号用） |
 
 ## 接口清单（鉴权 22 个）
 

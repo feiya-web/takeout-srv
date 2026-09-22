@@ -11,7 +11,8 @@ import json
 import pathlib
 import re
 
-ROOT = pathlib.Path(r"D:\takeout-srv\takeout-order")
+# 仓库根目录 = 本脚本所在目录的上一级，保证在任何机器上克隆后都能直接运行
+ROOT = pathlib.Path(__file__).resolve().parent.parent
 CTRL_DIR = ROOT / "src/main/java/com/takeout/controller"
 
 HTTP_MAP = {"Get": "get", "Post": "post", "Put": "put", "Delete": "delete"}

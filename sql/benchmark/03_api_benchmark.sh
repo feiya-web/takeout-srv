@@ -3,16 +3,18 @@
 # 接口层压测脚本（无需 JMeter）：对比「优化前（无联合索引）」与「优化后（联合索引）」的接口响应时间
 # 统计指标：平均耗时 / P95 耗时（单位 ms）
 # 用法：bash 03_api_benchmark.sh [请求次数]
+# 连接参数可用环境变量覆盖：BASE_URL / DEMO_PASSWORD
 # ============================================================
-BASE="http://localhost:8080"
+BASE="${BASE_URL:-http://localhost:8080}"
 N=${1:-100}
+DEMO_PASSWORD="${DEMO_PASSWORD:-123456}"   # 演示账号口令，与种子数据一致
 CURL() { curl -s --noproxy "*" "$@"; }
 
 # 登录拿 token
 USER_TOKEN=$(CURL -X POST "$BASE/user/login" -H "Content-Type: application/json" \
-  -d '{"username":"zhangsan","password":"123456"}' | sed 's/.*"token":"\([^"]*\)".*/\1/')
+  -d "{\"username\":\"zhangsan\",\"password\":\"$DEMO_PASSWORD\"}" | sed 's/.*"token":"\([^"]*\)".*/\1/')
 ADMIN_TOKEN=$(CURL -X POST "$BASE/admin/employee/login" -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"123456"}' | sed 's/.*"token":"\([^"]*\)".*/\1/')
+  -d "{\"username\":\"admin\",\"password\":\"$DEMO_PASSWORD\"}" | sed 's/.*"token":"\([^"]*\)".*/\1/')
 
 # 取一个真实订单号/订单ID用于详情查询
 ORDER_ID=$(CURL "$BASE/user/order/history?page=1&pageSize=1" -H "token: $USER_TOKEN" \

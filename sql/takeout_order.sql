@@ -1,6 +1,7 @@
 -- ============================================================
 -- 餐饮外卖订单系统 数据库初始化脚本
--- 使用：mysql -uroot -proot < takeout_order.sql
+-- 使用：mysql -u root -p < takeout_order.sql
+-- （按提示输入密码；密码由环境变量 MYSQL_PASSWORD 配置，默认 123456）
 -- ============================================================
 DROP DATABASE IF EXISTS takeout_order;
 CREATE DATABASE takeout_order DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

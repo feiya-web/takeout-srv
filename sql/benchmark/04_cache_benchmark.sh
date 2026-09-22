@@ -5,15 +5,17 @@
 # 场景B：读写混合（约 9% 写操作触发缓存失效）—— 对应真实业务的命中率口径
 # 场景C：每次读前清空缓存（模拟无缓存）—— 对比 DB 直查耗时
 # 用法：bash 04_cache_benchmark.sh
+# 连接参数可用环境变量覆盖：BASE_URL / REDIS_CLI / DEMO_PASSWORD
 # ============================================================
-BASE="http://localhost:8080"
-REDIS_CLI="/d/takeout-srv/.workbuddy/redis/redis-cli.exe"
+BASE="${BASE_URL:-http://localhost:8080}"
+REDIS_CLI="${REDIS_CLI:-redis-cli}"   # 默认取 PATH 中的 redis-cli
+DEMO_PASSWORD="${DEMO_PASSWORD:-123456}"   # 演示账号口令，与种子数据一致
 CURL() { curl -s --noproxy "*" "$@"; }
 
 ADMIN_TOKEN=$(CURL -X POST "$BASE/admin/employee/login" -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"123456"}' | sed 's/.*"token":"\([^"]*\)".*/\1/')
+  -d "{\"username\":\"admin\",\"password\":\"$DEMO_PASSWORD\"}" | sed 's/.*"token":"\([^"]*\)".*/\1/')
 USER_TOKEN=$(CURL -X POST "$BASE/user/login" -H "Content-Type: application/json" \
-  -d '{"username":"zhangsan","password":"123456"}' | sed 's/.*"token":"\([^"]*\)".*/\1/')
+  -d "{\"username\":\"zhangsan\",\"password\":\"$DEMO_PASSWORD\"}" | sed 's/.*"token":"\([^"]*\)".*/\1/')
 
 CACHE_KEY="dish:cache:list:2"
 DISH_ID=3000   # 用于模拟写操作的压测菜品

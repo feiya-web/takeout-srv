@@ -4,15 +4,20 @@
 # 耗时数据取自 performance_schema.events_statements_summary_by_digest（只统计 SQL 本身，不含客户端开销）
 # 前置：先执行 01_seed_bulk_data.sql 造数
 # 用法：bash 02_run_benchmark.sh
+# 连接参数可用环境变量覆盖，默认值对应本地开发环境：
+#   MYSQL_BIN / MYSQL_HOST / MYSQL_PORT / MYSQL_USER / MYSQL_PASSWORD / MYSQL_DB
 # ============================================================
-MYSQL_BIN="C:/Program Files/MySQL/MySQL Server 8.0/bin/mysql.exe"
-MYSQL_USER="root"
-MYSQL_PWD="123456"
-DB="takeout_order"
+MYSQL_BIN="${MYSQL_BIN:-mysql}"                             # 默认取 PATH 中的 mysql 客户端
+MYSQL_HOST="${MYSQL_HOST:-127.0.0.1}"
+MYSQL_PORT="${MYSQL_PORT:-3306}"
+MYSQL_USER="${MYSQL_USER:-root}"
+MYSQL_PWD="${MYSQL_PASSWORD:-123456}"
+DB="${MYSQL_DB:-takeout_order}"
 N=50   # 每个场景执行次数
 
 exec_sql() {
-  "$MYSQL_BIN" -u"$MYSQL_USER" -p"$MYSQL_PWD" --default-character-set=utf8mb4 "$DB" -e "$1" 2>/dev/null
+  "$MYSQL_BIN" -h"$MYSQL_HOST" -P"$MYSQL_PORT" -u"$MYSQL_USER" -p"$MYSQL_PWD" \
+    --default-character-set=utf8mb4 "$DB" -e "$1" 2>/dev/null
 }
 
 # 清零统计表
