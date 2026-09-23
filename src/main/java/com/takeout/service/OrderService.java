@@ -109,7 +109,10 @@ public class OrderService {
             }
 
             // 清除已下单的购物车条目
-            shoppingCartMapper.deleteBatchIds(dto.getCartItemIds());
+            shoppingCartMapper.delete(new LambdaQueryWrapper<ShoppingCart>()
+                    .in(ShoppingCart::getId, dto.getCartItemIds())
+                    .eq(ShoppingCart::getUserId, userId));
+
 
             return new OrderSubmitVO(orders.getId(), orders.getNumber(), amount, orders.getStatus());
         } finally {

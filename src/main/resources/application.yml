@@ -24,7 +24,7 @@ mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   global-config:
     db-config:
       id-type: auto
@@ -44,3 +44,15 @@ takeout:
 logging:
   level:
     com.takeout: info
+    # MyBatis 通过 SLF4J 打 SQL 时，logger 名 = mapper 接口全限定名，且级别为 DEBUG。
+    # 不单独开这一行，SQL 会被上面的 com.takeout: info 挡掉（换个 log-impl 等于白改）。
+    com.takeout.mapper: debug
+  # 关键：日志同时落磁盘。否则线上/复现时出过一次的故障在控制台滚屏后就再也查不到，
+  # 排障只能靠数据库反推（本项目就吃过这个亏）。
+  file:
+    name: logs/takeout-order.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7
+      total-size-cap: 200MB
