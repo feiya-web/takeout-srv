@@ -19,6 +19,9 @@ public class MessageConstant {
     public static final String CART_EMPTY = "购物车为空，不能下单";
     public static final String ORDER_DUPLICATE_SUBMIT = "订单提交中，请勿重复点击";
     public static final String ORDER_NOT_FOUND = "订单不存在";
+    public static final String EMPLOYEE_NOT_FOUND = "员工不存在";
+    public static final String CANNOT_DISABLE_SELF = "不能禁用自己";
+    public static final String STATUS_INVALID = "状态值不合法，只允许 0(禁用) 或 1(启用)";
     public static final String NO_PERMISSION = "无权限操作该订单";
     public static final String OPERATION_FAILED = "操作失败";
 }
