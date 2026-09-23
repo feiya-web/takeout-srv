@@ -29,3 +29,7 @@ target/
 *.iml
 .vscode/
 logs/
+
+# ===== Python（tools/verify 下的验收脚本）=====
+__pycache__/
+*.py[cod]

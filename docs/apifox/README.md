@@ -2,7 +2,7 @@
 
 接口文件：[`openapi.json`](./openapi.json)（OpenAPI 3.0 格式，Apifox 原生支持）
 
-**共 40 个接口 / 34 个路径 / 10 个分组**，由 `tools/export_openapi.py` 从 Controller 源码自动提取生成，
+**共 44 个接口 / 37 个路径 / 10 个分组**，由 `tools/export_openapi.py` 从 Controller 源码自动提取生成，
 接口改了重新跑一次脚本即可同步，文档不会和实现脱节。
 
 ---
@@ -60,11 +60,11 @@ OpenAPI 文件里已声明 `token` 鉴权方案，导入后：
 
 ---
 
-## 四、接口清单（40 个）
+## 四、接口清单（44 个）
 
 | 分组 | 接口 |
 |------|------|
-| 员工管理 | `POST /admin/employee/login`、`GET /admin/employee/{id}` |
+| 员工管理 | `POST /admin/employee/login`、`GET /admin/employee/{id}`、`POST /admin/employee`（新增）、`PUT /admin/employee/{id}`（编辑）、`PUT /admin/employee/{id}/status/{status}`（启用禁用）、`GET /admin/employee/page`（分页查询） |
 | 分类管理 | `POST /admin/category`、`PUT /admin/category`、`DELETE /admin/category`、`GET /admin/category/page`、`GET /admin/category/list` |
 | 菜品管理 | `POST /admin/dish`、`PUT /admin/dish`、`DELETE /admin/dish`、`GET /admin/dish/page`、`GET /admin/dish/list`、`POST /admin/dish/status/{status}` |
 | 套餐管理 | `POST /admin/setmeal`、`PUT /admin/setmeal`、`DELETE /admin/setmeal`、`GET /admin/setmeal/page`、`GET /admin/setmeal/{id}`、`POST /admin/setmeal/status/{status}` |
@@ -82,7 +82,20 @@ OpenAPI 文件里已声明 `token` 鉴权方案，导入后：
 接口有增删改后，重新生成：
 
 ```bash
-python tools/export_openapi.py > docs/apifox/openapi.json
+python tools/export_openapi.py --out docs/apifox/openapi.json
+```
+
+看到 `written docs/apifox/openapi.json (34149 bytes, utf-8 no BOM)` 才算成功。
+
+> ⚠️ **不要用 `>` 重定向**：PowerShell 的 `>` 会在命令执行前先把目标文件截断成 0 字节，
+> 且写出的是 UTF-16LE（中文还会变乱码）。`--out` 由脚本自己以 UTF-8 无 BOM 落盘。
+> 另外本机 PATH 上的 `python` 可能是 Microsoft Store 的占位别名，会**零输出、退出码 0**地空转——
+> 命令"成功但没输出"就当失败处理。
+
+生成后跑一遍自检，确认文档与代码同步：
+
+```bash
+python tools/verify/check_openapi.py    # 期望：通过 24 / 失败 0
 ```
 
 脚本会重新扫描 `src/main/java/com/takeout/controller` 下所有 Controller，

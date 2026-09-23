@@ -10,6 +10,8 @@
 import json
 import pathlib
 import re
+import sys
+
 
 # 仓库根目录 = 本脚本所在目录的上一级，保证在任何机器上克隆后都能直接运行
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -24,7 +26,7 @@ JAVA_TYPE = {
 
 # Controller -> 中文分组名 / 描述
 TAG_DESC = {
-    "EmployeeController": ("员工管理", "管理端员工登录与信息查询"),
+    "EmployeeController": ("员工管理", "管理端员工登录、信息查询、新增/编辑、启用禁用与分页条件查询"),
     "CategoryController": ("分类管理", "菜品分类与套餐分类的增删改查"),
     "DishController": ("菜品管理", "菜品及口味维护、起售停售，变更后清理 Cache Aside 缓存"),
     "SetmealController": ("套餐管理", "套餐与套餐明细维护、起售停售"),
@@ -36,7 +38,7 @@ TAG_DESC = {
     "UserOrderController": ("用户订单", "下单（事务+幂等）、模拟支付、取消、历史订单与详情"),
 }
 
-REF_TYPES = {"LoginDTO", "ShoppingCartDTO", "OrdersSubmitDTO", "Category", "DishDTO", "SetmealDTO"}
+REF_TYPES = {"LoginDTO", "ShoppingCartDTO", "OrdersSubmitDTO", "Category", "DishDTO", "SetmealDTO","EmployeeDTO", "EmployeeUpdateDTO"}
 
 
 def split_top_level(text: str):
@@ -226,6 +228,20 @@ def build():
                     "image": {"type": "string"}, "description": {"type": "string"},
                     "status": {"type": "integer", "example": 1},
                     "setmealDishes": {"type": "array", "items": {"type": "object"}}}},
+                "EmployeeDTO": {"type": "object",
+                                "required": ["name", "username", "password"],
+                                "properties": {
+                                    "name": {"type": "string", "example": "张小厨"},
+                                    "username": {"type": "string", "example": "chef01"},
+                                    "password": {"type": "string", "example": "Test@12345"},
+                                    "phone": {"type": "string", "description": "选填，^1[3-9]\\d{9}$",
+                                              "example": "13900001111"}}},
+                "EmployeeUpdateDTO": {"type": "object",
+                                      "required": ["name"],
+                                      "properties": {
+                                          "name": {"type": "string", "example": "张小厨"},
+                                          "phone": {"type": "string", "description": "选填，^1[3-9]\\d{9}$",
+                                                    "example": "13900001111"}}},
             },
         },
         "security": [{"token": []}],
@@ -234,4 +250,12 @@ def build():
 
 
 if __name__ == "__main__":
-    print(json.dumps(build(), ensure_ascii=False, indent=2))
+    text = json.dumps(build(), ensure_ascii=False, indent=2) + "\n"
+    if "--out" in sys.argv:
+        out = pathlib.Path(sys.argv[sys.argv.index("--out") + 1])
+        # 自己落盘：绕开 shell 的 ①预截断 ②编码转换 ③PS 的 cp936 误解码
+        out.write_text(text, encoding="utf-8", newline="\n")
+        print("written %s (%d bytes, utf-8 no BOM)" % (out, out.stat().st_size))
+    else:
+        print(text, end="")
+
